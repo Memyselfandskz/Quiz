@@ -159,6 +159,49 @@ const answerOptionsContainer = document.getElementById('answer-options');
     function showFinalResult() {
       resultText.textContent = `Quiz Completed! Your Score: ${score} out of ${maxQuestions}`;
       answerOptionsContainer.innerHTML = '';
+
+      // Generate witty feedback based on the score
+      const feedback = generateFeedback(score);
+      resultText.innerHTML += `<p>${feedback}</p>`;
+    }
+
+    function generateFeedback(score) {
+      const positiveFeedbackOptions = [
+        "Wow, you're a Stray Kids genius! Perfect score!",
+        "Great job! You know your Stray Kids albums quite well!",
+        "Not bad! You're on your way to becoming a Stray Kids expert!",
+        "Impressive! You've got a good grasp of Stray Kids' discography.",
+        "Fantastic! Your Stray Kids knowledge is top-notch.",
+        "You're a Stray Kids connoisseur! Excellent job on the quiz.",
+        "Outstanding! You've mastered the art of Stray Kids album recognition.",
+        "Bravo! You've proved your mastery of Stray Kids music.",
+        "Excellent work! Your Stray Kids knowledge is truly remarkable.",
+        "You're on fire! Stray Kids would be proud of your score."
+      ];
+
+      const negativeFeedbackOptions = [
+        "Oops! Did you accidentally pick the albums from a different universe?",
+        "Well, that was unexpected... like Stray Kids releasing a country album.",
+        "I hope you weren't confusing Stray Kids with elevator music.",
+        "You're on a unique journey of Stray Kids discovery... in the wrong direction.",
+        "Are you sure you didn't just guess the answers based on the song titles?",
+        "Hmm, maybe Stray Kids should consider adding a 'None of the Above' option to their albums.",
+        "Looks like you took a detour through the Stray Kids B-side universe. Keep exploring!",
+        "Stray Kids might need to hire you as their secret album name consultant after this quiz!",
+        "It happens to the best of us! Stray Kids' discography is a maze, and you just hit a dead end.",
+        "Don't worry! Stray Kids' albums are like a treasure hunt, and you'll find the gems with a bit more practice."
+      ];
+
+      if (score >= (2 / 3) * maxQuestions) {
+        return getRandomItem(positiveFeedbackOptions);
+      } else {
+        return getRandomItem(negativeFeedbackOptions);
+      }
+    }
+
+    function getRandomItem(array) {
+      const randomIndex = Math.floor(Math.random() * array.length);
+      return array[randomIndex];
     }
 
     function shuffleArray(array) {
