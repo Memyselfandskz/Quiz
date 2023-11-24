@@ -108,58 +108,83 @@
   {"title": "처음처럼 (The View)", "releaseYear": 2021, "album": "Noeasy"}
 ];
 
-const answerOptionsContainer = document.getElementById('answer-options');
+    const members = ["Bang Chan", "Lee Know", "Changbin", "Hyunjin", "Han", "Felix", "Seungmin", "IN"];
+ 
+    const answerOptionsContainer = document.getElementById('answer-options');
     const resultText = document.getElementById('result');
-    const maxQuestions = 15;
+    const maxQuestions = 2;
     const optionsCount = 4;
     let currentQuestionIndex = 0;
     let score = 0;
-
+ 
     // Shuffle the song list once before the first question
     shuffleArray(songs);
-
+ 
     function loadQuestion() {
+
       if (currentQuestionIndex < maxQuestions) {
-        const currentSong = songs[currentQuestionIndex];
-        const options = [...new Set(songs.map(song => song.album))];
-        shuffleArray(options);
-
-        // Ensure the correct answer is included
-        let selectedOptions = options.slice(0, optionsCount - 1);
-        selectedOptions.push(currentSong.album);
-
-        // Remove duplicates, if any
-        selectedOptions = [...new Set(selectedOptions)];
-
-        shuffleArray(selectedOptions);
-
+        document.getElementById('question').innerHTML = "";
         answerOptionsContainer.innerHTML = '';
-        selectedOptions.forEach(option => {
-          const optionButton = document.createElement('button');
-          optionButton.classList.add('option-button');
-          optionButton.textContent = option;
-          optionButton.onclick = function() {
-            checkAnswer(option);
-          };
-          answerOptionsContainer.appendChild(optionButton);
-        });
+        if (currentQuestionIndex < maxQuestions - 1) {
+            const currentSong = songs[currentQuestionIndex];
+            const options = [...new Set(songs.map(song => song.album))];
+            shuffleArray(options);
+    
+            // Ensure the correct answer is included
+            let selectedOptions = options.slice(0, optionsCount - 1);
+            selectedOptions.push(currentSong.album);
+    
+            // Remove duplicates, if any
+            selectedOptions = [...new Set(selectedOptions)];
+    
+            shuffleArray(selectedOptions);
 
-        document.getElementById('question').textContent = `Which album does the song "${currentSong.title}" belong to?`;
+            selectedOptions.forEach(option => {
+            const optionButton = document.createElement('button');
+            optionButton.classList.add('option-button');
+            optionButton.textContent = option;
+            optionButton.onclick = function() {
+                checkAnswer(option);
+            };
+            answerOptionsContainer.appendChild(optionButton);
+            });
+            document.getElementById('question').innerHTML = `Which album does the song "${currentSong.title}" belong to?`;
+        } else {
+            // Add the bias question after the song question
+            document.getElementById('question').innerHTML += ` Who is your bias?`;
+            members.forEach(member => {
+                const optionButton = document.createElement('button');
+                optionButton.classList.add('option-button');
+                optionButton.textContent = member;
+                optionButton.onclick = function() {
+                checkBiasAnswer(member);
+                };
+                answerOptionsContainer.appendChild(optionButton);
+            });
+        }
+
       } else {
         showFinalResult();
       }
     }
-
+ 
+    function checkBiasAnswer(selectedAnswer) {
+      resultText.textContent = `Your bias is ${selectedAnswer}! Great choice!`;
+      resultText.style.color = '#f4c542';
+      score++;
+      showFinalResult();
+    }
+ 
     function checkAnswer(selectedAnswer) {
       const currentSong = songs[currentQuestionIndex];
-
+ 
       if (selectedAnswer === currentSong.album) {
         resultText.textContent = 'Correct!';
         score++;
       } else {
         resultText.textContent = `Incorrect. The correct answer is "${currentSong.album}".`;
       }
-
+ 
       currentQuestionIndex++;
       if (currentQuestionIndex < songs.length) {
         loadQuestion();
@@ -167,16 +192,17 @@ const answerOptionsContainer = document.getElementById('answer-options');
         showFinalResult();
       }
     }
-
+ 
     function showFinalResult() {
-      resultText.textContent = `Quiz Completed! Your Score: ${score} out of ${maxQuestions}`;
+      document.getElementById('question').innerHTML = "";
+      resultText.innerHTML += `<p>Quiz Completed! Your Score: ${score} out of ${maxQuestions}</p>`;
       answerOptionsContainer.innerHTML = '';
-
+ 
       // Generate witty feedback based on the score
       const feedback = generateFeedback(score);
       resultText.innerHTML += `<p>${feedback}</p>`;
     }
-
+ 
     function generateFeedback(score) {
       const positiveFeedbackOptions = [
         "Wow, you're a Stray Kids genius! Perfect score!",
@@ -190,7 +216,7 @@ const answerOptionsContainer = document.getElementById('answer-options');
         "Excellent work! Your Stray Kids knowledge is truly remarkable.",
         "You're on fire! Stray Kids would be proud of your score."
       ];
-
+ 
       const negativeFeedbackOptions = [
         "Oops! Did you accidentally pick the albums from a different universe?",
         "Well, that was unexpected... like Stray Kids releasing a country album.",
@@ -203,27 +229,27 @@ const answerOptionsContainer = document.getElementById('answer-options');
         "It happens to the best of us! Stray Kids' discography is a maze, and you just hit a dead end.",
         "Don't worry! Stray Kids' albums are like a treasure hunt, and you'll find the gems with a bit more practice."
       ];
-
+ 
       if (score >= (2 / 3) * maxQuestions) {
         return getRandomItem(positiveFeedbackOptions);
       } else {
         return getRandomItem(negativeFeedbackOptions);
       }
     }
-
+ 
     function getRandomItem(array) {
       const randomIndex = Math.floor(Math.random() * array.length);
       return array[randomIndex];
     }
-
+ 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-
+ 
     loadQuestion();
-  </script>
+</script>
 </body>
 </html>
