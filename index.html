@@ -1,10 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My First Web Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stray Kids Album Quiz</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #quiz-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+    }
+    .option-button {
+      margin-top: 10px;
+      padding: 10px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <p>This is a simple web page.</p>
+  <h1>Stray Kids Album Quiz</h1>
+  <div id="quiz-container">
+    <p id="question">Which album does the song belong to?</p>
+    <div id="answer-options">
+      <!-- Options will be dynamically added using JavaScript -->
+    </div>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const songs = [
+      {"title": "Hellevator", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "Grrr 총량의 법칙", "englishTitle": "Grrr Law of Total Madness", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "어린 날개", "englishTitle": "Spread My Wings", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "YAYAYA", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "GLOW", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "School Life", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "4419", "englishTitle": "Mixtape #1", "releaseYear": 2018, "album": "Mixtape"},
+      {"title": "The View", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "소리꾼", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "Sorry, I Love You", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "말할 수 없는 비밀", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "Maze of Memories", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "Red Lights", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "고백", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "DOMINO", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "좋아좋아좋아 (I Love You)", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "애", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "우린 문제 없어 (Another Day)", "releaseYear": 2021, "album": "Noeasy"},
+      {"title": "처음처럼 (The View)", "releaseYear": 2021, "album": "Noeasy"}
+    ];
+
+    const answerOptionsContainer = document.getElementById('answer-options');
+    const resultText = document.getElementById('result');
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const currentSong = songs[currentQuestionIndex];
+      const options = songs.map(song => song.album);
+      options.sort((a, b) => Math.random() - 0.5); // Shuffle options
+
+      // Populate the container with buttons for each option
+      answerOptionsContainer.innerHTML = '';
+      options.forEach(option => {
+        const optionButton = document.createElement('button');
+        optionButton.classList.add('option-button');
+        optionButton.textContent = option;
+        optionButton.onclick = function() {
+          checkAnswer(option);
+        };
+        answerOptionsContainer.appendChild(optionButton);
+      });
+
+      // Set the question text
+      document.getElementById('question').textContent = `Which album does the song "${currentSong.title}" belong to?`;
+    }
+
+    function checkAnswer(selectedAnswer) {
+      const currentSong = songs[currentQuestionIndex];
+
+      if (selectedAnswer === currentSong.album) {
+        resultText.textContent = 'Correct!';
+        score++;
+      } else {
+        resultText.textContent = `Incorrect. The correct answer is "${currentSong.album}".`;
+      }
+
+      // Move to the next question or end the quiz
+      currentQuestionIndex++;
+      if (currentQuestionIndex < songs.length) {
+        loadQuestion();
+      } else {
+        showFinalResult();
+      }
+    }
+
+    function showFinalResult() {
+      resultText.textContent = `Quiz Completed! Your Score: ${score} out of ${songs.length}`;
+      answerOptionsContainer.innerHTML = ''; // Clear options
+    }
+
+    // Initial load
+    loadQuestion();
+  </script>
 </body>
 </html>
