@@ -74,7 +74,7 @@
 
     function loadQuestion() {
       const currentSong = songs[currentQuestionIndex];
-      const options = songs.map(song => song.album);
+      const options = [...new Set(songs.map(song => song.album))]; // Unique album names
       options.sort((a, b) => Math.random() - 0.5); // Shuffle options
 
       // Populate the container with buttons for each option
