@@ -69,28 +69,41 @@
 
     const answerOptionsContainer = document.getElementById('answer-options');
     const resultText = document.getElementById('result');
+    const maxQuestions = 15;  // Set the maximum number of questions
     let currentQuestionIndex = 0;
     let score = 0;
 
+    // Function to shuffle array elements
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
     function loadQuestion() {
-      const currentSong = songs[currentQuestionIndex];
-      const options = [...new Set(songs.map(song => song.album))]; // Unique album names
-      options.sort((a, b) => Math.random() - 0.5); // Shuffle options
+      if (currentQuestionIndex < maxQuestions) {
+        const currentSong = songs[currentQuestionIndex];
+        const options = [...new Set(songs.map(song => song.album))]; // Unique album names
+        shuffleArray(options);  // Shuffle options
 
-      // Populate the container with buttons for each option
-      answerOptionsContainer.innerHTML = '';
-      options.forEach(option => {
-        const optionButton = document.createElement('button');
-        optionButton.classList.add('option-button');
-        optionButton.textContent = option;
-        optionButton.onclick = function() {
-          checkAnswer(option);
-        };
-        answerOptionsContainer.appendChild(optionButton);
-      });
+        // Populate the container with buttons for each option
+        answerOptionsContainer.innerHTML = '';
+        options.forEach(option => {
+          const optionButton = document.createElement('button');
+          optionButton.classList.add('option-button');
+          optionButton.textContent = option;
+          optionButton.onclick = function() {
+            checkAnswer(option);
+          };
+          answerOptionsContainer.appendChild(optionButton);
+        });
 
-      // Set the question text
-      document.getElementById('question').textContent = `Which album does the song "${currentSong.title}" belong to?`;
+        // Set the question text
+        document.getElementById('question').textContent = `Which album does the song "${currentSong.title}" belong to?`;
+      } else {
+        showFinalResult();
+      }
     }
 
     function checkAnswer(selectedAnswer) {
@@ -113,7 +126,7 @@
     }
 
     function showFinalResult() {
-      resultText.textContent = `Quiz Completed! Your Score: ${score} out of ${songs.length}`;
+      resultText.textContent = `Quiz Completed! Your Score: ${score} out of ${maxQuestions}`;
       answerOptionsContainer.innerHTML = ''; // Clear options
     }
 
